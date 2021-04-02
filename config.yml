@@ -10,7 +10,12 @@ before:
 steps:
   - title: First step
     description: The first step in your course
-    event: issues.assigned
+    event: pull_request
     link: '{{ repoUrl }}'
     actions:
-      - type: closeIssue
+      - type: respond
+        with: new-issue.md
+      - type: gate
+        left: 3
+        operator: ==
+        right: 4
