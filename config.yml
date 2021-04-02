@@ -18,6 +18,12 @@ steps:
       - type: getTree
         action_id: isInTree
         recursive: true
+        sha: '%payload.pull_request.head.sha%'
+      - type: createFile
+        filename: t-hi.md
+        branch: '%payload.pull_request.head.ref%'
+        new_name: hi.md
+        message: Create hi
       - type: gate
         left: '%actions.isInTree.data.tree%'
         operator: includes
