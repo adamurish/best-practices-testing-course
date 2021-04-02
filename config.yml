@@ -1,0 +1,16 @@
+title: best-practices-testing
+description: test repo for best practices
+template:
+  repo: best-practices-testing-template
+  name: best-practices-testing
+before:
+  - type: createIssue
+    title: Welcome!
+    body: new-issue.md
+steps:
+  - title: First step
+    description: The first step in your course
+    event: issues.assigned
+    link: '{{ repoUrl }}'
+    actions:
+      - type: closeIssue
