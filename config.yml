@@ -22,7 +22,7 @@ steps:
       - type: gate
         left: '%actions.isInTree.data.tree%'
         operator: includes
-        right: hi.md
+        right: 'path:hi.md'
         else:
           - type: createFile
             filename: t-hi.md
