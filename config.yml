@@ -15,7 +15,22 @@ steps:
     actions:
       - type: respond
         with: new-issue.md
+      - type: getTree
+        action_id: isInTree
+        recursive: true
       - type: gate
-        left: 3
-        operator: ==
-        right: 4
+        left: '%actions.isInTree.data.tree%'
+        operator: includes
+        right: 'path:LICENSE'
+        else:
+          # help user with proper file name or location
+          - type: respond
+            with: e-wrong-file-location.md
+            data:
+              haveFile: ''
+              needFile: LICENSE
+              editLink: >-
+                {{store.repository_url}}/new/{{store.first_pull_headref}}?filename=LICENSE
+              fileName: LICENSE
+      - type: respond
+        with: done.md
