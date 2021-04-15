@@ -10,7 +10,9 @@ before:
 steps:
   - title: First step
     description: The first step in your course
-    event: pull_request
+    event: 
+      - pull_request.opened
+      - pull_request.synchronize
     link: '{{ repoUrl }}'
     actions:
       - type: respond
@@ -19,25 +21,62 @@ steps:
         action_id: isInTree
         recursive: true
         sha: '%payload.pull_request.head.sha%'
-      - type: createFile
-        filename: t-hi.md
-        branch: '%payload.pull_request.head.ref%'
-        new_name: hi.md
-        message: Create hi
-        required: false
       - type: gate
         left: '%actions.isInTree.data.tree%'
         operator: includes
         right: 'path:LICENSE'
         else:
           # help user with proper file name or location
+          - type: findInTree
+            path: LICENSE
+            tree: '%actions.isInTree.data.tree%'
+            action_id: fileLocation
           - type: respond
             with: e-wrong-file-location.md
             data:
-              haveFile: ''
+              haveFile: '%actions.fileLocation.path%'
               needFile: LICENSE
               editLink: >-
                 {{store.repository_url}}/new/{{store.first_pull_headref}}?filename=LICENSE
               fileName: LICENSE
+      - type: createFile
+        filename: t-hi.md
+        branch: '%payload.pull_request.head.ref%'
+        new_name: hi.md
+        message: Create hi
+        required: false
       - type: respond
         with: done.md
+
+# - type: gate
+#         left: '%actions.isInTree.data.tree%'
+#         operator: includes
+#         right: 'path:LICENSE'
+#         else:
+#           # help user with proper file name or location
+#           # if file isn't where expected find true location
+#           - type: findInTree
+#             path: LICENSE
+#             tree: '%actions.isInTree.data.tree%'
+#             action_id: fileLocation
+#           - type: respond
+#             with: e-wrong-file-location.md
+#             data:
+#               haveFile: '%actions.fileLocation.path%'
+#               needFile: LICENSE
+#               editLink: >-
+#                 {{store.repository_url}}/new/{{store.first_pull_headref}}?filename=LICENSE
+#               fileName: LICENSE
+#         # End filepath verification
+#         # Create README.md
+#         # Moved to end of step to keep it from interfering with other actions
+#       - type: createFile
+#         filename: t-README-template.md
+#         branch: '%payload.pull_request.head.ref%'
+#         new_name: README.md
+#         message: Created a README.md from a template.
+#       - type: respond
+#         with: 02_add-gitignore.md
+#         data:
+#           quicklink: >-
+#             %store.repository_url%/new/%payload.pull_request.head.ref%?filename=.gitignore
