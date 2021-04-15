@@ -21,6 +21,10 @@ steps:
         action_id: isInTree
         recursive: true
         sha: '%payload.pull_request.head.sha%'
+        store:
+          first_pull_url: '{{payload.pull_request.html_url}}'
+          first_pull_num: '{{payload.pull_request.number}}'
+          first_pull_headref: '{{payload.pull_request.head.ref}}'
       - type: gate
         left: '%actions.isInTree.data.tree%'
         operator: includes
@@ -44,7 +48,6 @@ steps:
         branch: '%payload.pull_request.head.ref%'
         new_name: hi.md
         message: Create hi
-        required: false
       - type: respond
         with: done.md
 
