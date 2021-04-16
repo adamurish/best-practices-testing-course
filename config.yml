@@ -42,7 +42,7 @@ steps:
               haveFile: '%actions.fileLocation.path%'
               needFile: LICENSE
               editLink: >-
-                {{store.repository_url}}/new/{{payload.pull_request.head.ref}}?filename=LICENSE
+                {{store.repository_url}}/new/{{payload.pull_request.head.ref}}?filename=test/LICENSE
               fileName: LICENSE
       - type: createFile
         filename: t-hi.md
