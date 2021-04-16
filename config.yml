@@ -42,8 +42,28 @@ steps:
               haveFile: '%actions.fileLocation.path%'
               needFile: LICENSE
               editLink: >-
-                {{store.repository_url}}/new/{{payload.pull_request.head.ref}}?filename=test/LICENSE
+                {{store.repository_url}}/new/{{payload.pull_request.head.ref}}?filename=LICENSE
               fileName: LICENSE
+      - type: respond
+        with: t-hi.md
+      - type: gate
+        left: '%actions.isInTree.data.tree%'
+        operator: includes
+        right: 'path:test/LICENSE'
+        else:
+          # help user with proper file name or location
+          - type: findInTree
+            path: test/LICENSE
+            tree: '%actions.isInTree.data.tree%'
+            action_id: fileLocation
+          - type: respond
+            with: e-wrong-file-location.md
+            data:
+              haveFile: '%actions.fileLocation.path%'
+              needFile: test/LICENSE
+              editLink: >-
+                {{store.repository_url}}/new/{{payload.pull_request.head.ref}}?filename=test/LICENSE
+              fileName: test/LICENSE
       - type: createFile
         filename: t-hi.md
         branch: '%payload.pull_request.head.ref%'
