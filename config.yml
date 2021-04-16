@@ -7,6 +7,11 @@ before:
   - type: createIssue
     title: Welcome!
     body: new-issue.md
+    store:
+      repository_name: '{{ payload.repository.name }}'
+      repository_url: '{{ payload.repository.html_url }}'
+      repository_owner: '{{ payload.repository.owner.login }}'
+      repository_default_branch: '{{ payload.repository.default_branch }}'
 steps:
   - title: First step
     description: The first step in your course
@@ -37,7 +42,7 @@ steps:
               haveFile: '%actions.fileLocation.path%'
               needFile: LICENSE
               editLink: >-
-                {{store.repository_url}}/new/{{store.first_pull_headref}}?filename=LICENSE
+                {{store.repository_url}}/new/{{payload.pull_request.head.ref}}?filename=LICENSE
               fileName: LICENSE
       - type: createFile
         filename: t-hi.md
